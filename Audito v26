@@ -1246,7 +1246,7 @@
         const list = document.getElementById('history-list');
         list.innerHTML = '';
         if (!entries.length) {
-            list.innerHTML = '<div class="history-empty">Aucune version sauvegardée pour ce modèle.<br>L'historique se constitue à chaque enregistrement.</div>';
+            list.innerHTML = '<div class="history-empty">Aucune version sauvegardée pour ce modèle.<br>L\'historique se constitue à chaque enregistrement.</div>';
         } else {
             entries.forEach((entry, i) => {
                 const d = new Date(entry.ts);
