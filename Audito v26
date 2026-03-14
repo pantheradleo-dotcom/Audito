@@ -36,7 +36,8 @@
         ::-webkit-scrollbar-thumb:hover{background:var(--primary);}
 
         /* ══ SIDEBAR ══ */
-        .sidebar{width:260px;background:var(--bg-sidebar);color:white;display:flex;flex-direction:column;padding:24px;border-right:1px solid rgba(255,255,255,.05);flex-shrink:0;}
+        .sidebar{width:260px;background:var(--bg-sidebar);color:white;display:flex;flex-direction:column;padding:24px;border-right:1px solid rgba(255,255,255,.05);flex-shrink:0;transition:width .25s,padding .25s,min-width .25s;overflow:hidden;min-width:260px;}
+        .sidebar.collapsed{width:0!important;padding:0!important;min-width:0!important;}
         .brand{font-size:1.4rem;font-weight:700;margin-bottom:30px;display:flex;align-items:center;gap:10px;}
         .brand span{color:var(--primary);}
         .nav-item{padding:12px 16px;margin-bottom:5px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:12px;color:#94a3b8;font-weight:500;transition:.2s;}
@@ -47,7 +48,7 @@
         .main-area{flex-grow:1;display:flex;flex-direction:column;overflow:hidden;}
         .view-section{display:none;height:100%;padding:40px;overflow-y:auto;}
         .view-section.active{display:block;}
-        #view-audition.active{display:flex;flex-direction:row;padding:0;overflow:hidden;}
+        #view-audition.active{display:flex;flex-direction:column;padding:0;overflow:hidden;}
 
         /* ══ INPUTS / BTN ══ */
         .search-input,.editor-input{width:100%;background:var(--bg-input);border:1px solid var(--border);padding:12px;border-radius:8px;color:var(--text-main);outline:none;transition:.2s;font:inherit;}
@@ -97,27 +98,50 @@
         .mini-card-sub{font-size:.72rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
         /* ══ AUDIT SIDEBAR ══ */
-        .audit-sidebar{width:300px;background:var(--bg-card);border-right:1px solid var(--border);padding:18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex-shrink:0;}
-        .control-group{background:var(--bg-app);padding:14px;border-radius:8px;border:1px solid var(--border);}
-        .control-title{font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
-        .toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.9rem;}
+        /* ══ BARRE OUTILS AUDITION ══ */
+        .audit-toolbar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;}
+        .audit-toolbar-sep{width:1px;height:22px;background:var(--border);margin:0 2px;flex-shrink:0;}
+        .audit-toolbar-group{display:flex;align-items:center;gap:5px;}
+        .tb-label{font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);letter-spacing:.6px;white-space:nowrap;}
+        .tb-input{background:var(--bg-input);border:1px solid var(--border);padding:5px 9px;border-radius:6px;color:var(--text-main);outline:none;font:inherit;font-size:.8rem;width:128px;transition:.15s;}
+        .tb-input:focus{border-color:var(--primary);}
+        .tb-toggle{display:flex;align-items:center;gap:4px;padding:5px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg-app);cursor:pointer;font-size:.77rem;font-weight:600;color:var(--text-muted);transition:.15s;white-space:nowrap;user-select:none;}
+        .tb-toggle:hover{border-color:var(--primary);color:var(--primary);}
+        .tb-toggle.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary);}
+        .tb-toggle .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
+        .tb-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-app);color:var(--text-main);cursor:pointer;font:inherit;font-size:.8rem;font-weight:600;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+        .tb-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+        .tb-btn.primary{background:var(--primary);color:white;border-color:var(--primary);}
+        .tb-btn.primary:hover{opacity:.9;}
+        /* Panneau phrases rapides escamotable */
+        .audit-snip-panel{width:0;min-width:0;overflow:hidden;background:var(--bg-card);border-left:0 solid var(--border);display:flex;flex-direction:column;transition:width .25s ease,min-width .25s,border-left-width .25s;flex-shrink:0;}
+        .audit-snip-panel.open{width:230px;min-width:230px;border-left-width:1px;}
+        .audit-snip-panel-inner{width:230px;padding:14px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
+        .audit-snip-title{font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);letter-spacing:.6px;margin-bottom:2px;}
+        /* Corps audition */
+        .audit-body{flex-grow:1;display:flex;overflow:hidden;}
+        .audit-paper-zone{flex-grow:1;background:var(--bg-app);padding:20px 32px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;}
+        .progress-bar-wrap{width:100%;max-width:860px;margin-bottom:10px;flex-shrink:0;}
+        .progress-bar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+        .progress-label{font-size:.75rem;font-weight:600;color:var(--text-muted);}
+        .progress-counter{font-size:.75rem;font-weight:700;color:var(--primary);background:var(--primary-light);padding:2px 10px;border-radius:20px;}
+        .progress-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden;}
+        .progress-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .4s;}
+        .paper-search-wrap{width:100%;max-width:860px;margin-bottom:10px;flex-shrink:0;}
+        .paper-search-wrap input{background:var(--bg-card);border:1px solid var(--border);padding:7px 14px;border-radius:8px;width:100%;color:var(--text-main);outline:none;font:inherit;font-size:.88rem;transition:.2s;}
+        .paper-search-wrap input:focus{border-color:var(--primary);}
+        .audit-paper{background:var(--bg-card);width:100%;max-width:860px;min-height:400px;border-radius:12px;border:1px solid var(--border);padding:40px 52px;box-shadow:0 4px 20px rgba(0,0,0,.05);transition:background .3s;}
+        /* Déclaration victime — bouton copie */
+        .q-declaration-copy{background:none;border:1px solid rgba(37,99,235,.25);color:var(--primary);font-size:.7rem;padding:2px 8px;border-radius:4px;cursor:pointer;font-family:inherit;font-weight:600;opacity:0;transition:.15s;margin-left:auto;flex-shrink:0;}
+        .q-declaration-box:hover .q-declaration-copy{opacity:1;}
+        .q-declaration-copy:hover{background:var(--primary);color:white;}
+        /* Toggles (conservé pour compatibilité éditeur) */
         .toggle-switch{width:36px;height:20px;background:#9ca3af;border-radius:20px;position:relative;cursor:pointer;transition:.3s;flex-shrink:0;}
         .toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:white;border-radius:50%;transition:.3s;}
         .toggle-switch.active{background:var(--primary);}
         .toggle-switch.active::after{left:18px;}
-
-        /* ══ ZONE PAPIER ══ */
-        .audit-paper-zone{flex-grow:1;background:var(--bg-app);padding:24px 40px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;}
-        .progress-bar-wrap{width:100%;max-width:900px;margin-bottom:12px;flex-shrink:0;}
-        .progress-bar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
-        .progress-label{font-size:.78rem;font-weight:600;color:var(--text-muted);}
-        .progress-counter{font-size:.78rem;font-weight:700;color:var(--primary);background:var(--primary-light);padding:2px 10px;border-radius:20px;}
-        .progress-track{height:5px;background:var(--border);border-radius:4px;overflow:hidden;}
-        .progress-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .4s;}
-        .paper-search-wrap{width:100%;max-width:900px;margin-bottom:10px;flex-shrink:0;}
-        .paper-search-wrap input{background:var(--bg-card);border:1px solid var(--border);padding:8px 14px;border-radius:8px;width:100%;color:var(--text-main);outline:none;font:inherit;font-size:.9rem;transition:.2s;}
-        .paper-search-wrap input:focus{border-color:var(--primary);}
-        .audit-paper{background:var(--bg-card);width:100%;max-width:900px;min-height:500px;border-radius:12px;border:1px solid var(--border);padding:50px 60px;box-shadow:0 4px 20px rgba(0,0,0,.05);transition:background .3s;}
+        /* Sidebar escamotable */
+        .sidebar-expand-btn{position:fixed;left:0;top:50%;transform:translateY(-50%);background:var(--bg-sidebar);color:#94a3b8;border:none;border-radius:0 6px 6px 0;padding:10px 6px;cursor:pointer;z-index:10;font-size:.85rem;display:none;}
 
         /* ══ BLOCS Q ══ */
         .paper-q{margin-bottom:0;position:relative;transition:.15s;padding:18px 20px;border-radius:10px;border:1px solid transparent;background:var(--bg-card);}
@@ -129,10 +153,10 @@
         .q-header{display:flex;align-items:flex-start;margin-bottom:6px;}
         .q-content{font-size:1.05rem;color:var(--text-main);line-height:1.55;flex-grow:1;padding-top:3px;}
         .q-answer-zone{margin-top:10px;margin-left:36px;font-size:.95rem;color:var(--text-muted);font-style:italic;border-bottom:1px dashed var(--border);padding-bottom:6px;min-height:22px;}
-        .q-actions{position:absolute;right:12px;top:12px;opacity:0;transition:.2s;}
+        .q-actions{position:absolute;right:12px;top:12px;opacity:0;transition:.2s;display:flex;align-items:center;gap:4px;}
         .q-highlight{background:rgba(250,204,21,.4);border-radius:3px;}
         .q-declaration-box{margin-top:14px;margin-left:36px;background:var(--primary-light);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:12px 16px;}
-        .q-declaration-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+        .q-declaration-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;justify-content:flex-start;}
         .q-declaration-icon{font-size:.85rem;}
         .q-declaration-title{font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--primary);letter-spacing:.6px;}
         .q-declaration-text{color:var(--text-main);line-height:1.6;white-space:pre-wrap;font-size:.95rem;}
@@ -219,14 +243,63 @@
         .history-date{font-size:.78rem;font-weight:700;color:var(--primary);}
         .history-summary{font-size:.78rem;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .history-empty{text-align:center;padding:30px 0;color:var(--text-muted);font-size:.88rem;}
+        /* ══ NOTE MODÈLE ══ */
+        .model-note-field{width:100%;background:var(--bg-input);border:1px solid var(--border);padding:8px 10px;border-radius:6px;color:var(--text-muted);outline:none;font:inherit;font-size:.8rem;resize:vertical;min-height:52px;transition:.15s;line-height:1.5;}
+        .model-note-field:focus{border-color:var(--primary);color:var(--text-main);}
+        .model-note-field::placeholder{font-style:italic;}
+        /* ══ RACCOURCI CLAVIER DASHBOARD ══ */
+        .kbd-hint{position:absolute;bottom:8px;right:10px;font-size:.6rem;background:var(--bg-app);border:1px solid var(--border);color:var(--text-muted);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;opacity:0;transition:.15s;pointer-events:none;}
+        .card:hover .kbd-hint{opacity:.7;}
+        /* ══ TAGS LIBRES ══ */
+        .tag-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:.68rem;font-weight:600;background:rgba(139,92,246,.12);color:#7c3aed;border:1px solid rgba(139,92,246,.25);cursor:default;}
+        [data-theme="dark"] .tag-chip{background:rgba(167,139,250,.12);color:#a78bfa;border-color:rgba(167,139,250,.25);}
+        .tag-chip-rm{cursor:pointer;opacity:.6;margin-left:2px;line-height:1;}
+        .tag-chip-rm:hover{opacity:1;color:#ef4444;}
+        .tag-filter-chip{display:inline-flex;align-items:center;padding:3px 12px;border-radius:20px;background:var(--bg-app);border:1px solid rgba(139,92,246,.3);font-size:.72rem;font-weight:600;color:#7c3aed;cursor:pointer;transition:.15s;}
+        .tag-filter-chip.active,.tag-filter-chip:hover{background:#7c3aed;color:white;border-color:#7c3aed;}
+        [data-theme="dark"] .tag-filter-chip{color:#a78bfa;border-color:rgba(167,139,250,.3);}
+        [data-theme="dark"] .tag-filter-chip.active,[data-theme="dark"] .tag-filter-chip:hover{background:#7c3aed;color:white;}
+        .tag-input-wrap{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+        .tag-input{flex:1;min-width:120px;background:var(--bg-input);border:1px solid var(--border);padding:6px 10px;border-radius:6px;color:var(--text-main);outline:none;font:inherit;font-size:.82rem;}
+        .tag-input:focus{border-color:#7c3aed;}
+        /* ══ DRAG DASHBOARD ══ */
+        .card.dragging{opacity:.4;transform:scale(.97);}
+        .card.drag-target{border:2px dashed var(--primary)!important;background:var(--primary-light)!important;}
+        /* ══ DRAG QUESTIONS CONSULTATION ══ */
+        .paper-q.q-dragging{opacity:.35;}
+        .paper-q.q-drag-over{border-top:3px solid var(--primary);}
+        .q-drag-handle{cursor:grab;color:var(--text-muted);font-size:.95rem;padding:0 4px;opacity:0;transition:opacity .15s;flex-shrink:0;user-select:none;}
+        .q-drag-handle:active{cursor:grabbing;}
+        .paper-q:hover .q-drag-handle{opacity:.5;}
+        /* ══ MODAL IMPORT SÉLECTIF ══ */
+        .import-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-app);transition:.15s;}
+        .import-item.selected{border-color:var(--primary);background:var(--primary-light);}
+        .import-item-cb{width:18px;height:18px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;}
+        .import-conflict{font-size:.72rem;color:var(--warn);margin-top:2px;}
         /* Responsive */
         @media(max-width:900px){.editor-grid{grid-template-columns:1fr;}.audit-sidebar{width:260px;}.audit-paper{padding:30px 20px;}}
+        /* ══ IMPRESSION ══ */
+        @media print {
+            body{overflow:visible!important;height:auto!important;}
+            .sidebar,.audit-toolbar,.paper-search-wrap,.progress-bar-wrap,.q-actions,.q-drag-handle,.q-declaration-copy{display:none!important;}
+            .main-area,.view-section{overflow:visible!important;height:auto!important;}
+            #view-audition.active{display:block!important;overflow:visible!important;}
+            .audit-body{display:block!important;overflow:visible!important;}
+            .audit-snip-panel{display:none!important;}
+            .audit-paper-zone{padding:0!important;overflow:visible!important;display:block!important;}
+            .audit-paper{box-shadow:none!important;border:none!important;padding:10mm 15mm!important;max-width:100%!important;width:100%!important;min-height:0!important;}
+            .paper-q{break-inside:avoid;border:none!important;background:transparent!important;padding:6px 0!important;}
+            .paper-q:hover{background:transparent!important;}
+            .paper-section-divider{break-after:avoid;}
+            .q-declaration-box{break-inside:avoid;}
+            .q-answer-zone{min-height:32px!important;border-bottom:1px solid #ccc!important;}
+        }
     </style>
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="brand">📂 Audito<span>V26</span></div>
+    <div class="brand" style="justify-content:space-between;"><span>📂 Audito<span>V26</span></span><button id="sidebar-toggle" onclick="toggleSidebar()" style="background:none;border:none;color:#94a3b8;font-size:.95rem;cursor:pointer;padding:2px 5px;border-radius:4px;" title="Réduire">◀</button></div>
     <nav>
         <div class="nav-item active" id="nav-dash" onclick="navTo('view-dashboard')"><span>🏠</span> Accueil</div>
         <div class="nav-item" id="nav-snip" onclick="navTo('view-snippets')"><span>📋</span> Phrases Types</div>
@@ -247,46 +320,59 @@
 
     <!-- DASHBOARD -->
     <section id="view-dashboard" class="view-section active">
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:24px;flex-wrap:wrap;">
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
             <input type="text" id="search-input" class="search-input" style="max-width:360px;" placeholder="Rechercher une trame..." onkeyup="renderDashboard()">
         </div>
+        <div id="tag-filter-bar" style="display:none;margin-bottom:16px;"></div>
         <div id="dashboard-grid"></div>
     </section>
 
     <!-- AUDITION -->
     <section id="view-audition" class="view-section">
-        <aside class="audit-sidebar">
-            <button class="action-btn" onclick="navTo('view-dashboard')" style="background:var(--bg-app);color:var(--text-main);border:1px solid var(--border)">← Retour</button>
-            <div class="control-group">
-                <div class="control-title">Variables Automatiques</div>
-                <input type="text" id="var-nom" class="search-input" placeholder="[NOM] ex: M. Dupont" style="margin-bottom:10px;" oninput="updateVars()">
-                <input type="text" id="var-date" class="search-input" placeholder="[DATE] (Auto si vide)" oninput="updateVars()">
+        <div class="audit-toolbar">
+            <button class="tb-btn" onclick="navTo('view-dashboard')" style="color:var(--text-muted);">← Retour</button>
+            <div class="audit-toolbar-sep"></div>
+            <div class="audit-toolbar-group">
+                <span class="tb-label">NOM</span>
+                <input type="text" id="var-nom" class="tb-input" placeholder="ex: M. Dupont" oninput="updateVars()">
             </div>
-            <div class="control-group">
-                <div class="control-title">Mise en Forme (Export)</div>
-                <div class="toggle-row"><span>Questions en <b>Gras</b></span><div class="toggle-switch active" id="tog-bold" onclick="toggleStyle('bold')"></div></div>
-                <div class="toggle-row"><span>Mention "Réponse :"</span><div class="toggle-switch active" id="tog-resp" onclick="toggleStyle('resp')"></div></div>
-                <div class="toggle-row"><span>Numérotation</span><div class="toggle-switch" id="tog-num" onclick="toggleStyle('num')"></div></div>
+            <div class="audit-toolbar-group">
+                <span class="tb-label">DATE</span>
+                <input type="text" id="var-date" class="tb-input" placeholder="Auto si vide" oninput="updateVars()">
             </div>
-            <div class="control-group">
-                <div class="control-title">Phrases Rapides</div>
-                <div id="quick-snippets" style="display:flex;flex-direction:column;gap:5px;"></div>
-            </div>
-            <button class="action-btn" onclick="copyFullReport()">Copier Tout 📋</button>
-            <button class="action-btn" onclick="exportSingleModel()" style="background:var(--bg-app);color:var(--text-main);border:1px solid var(--border);font-size:.85rem;">💾 Exporter ce modèle</button>
-        </aside>
-        <div class="audit-paper-zone">
-            <div class="progress-bar-wrap" id="progress-wrap">
-                <div class="progress-bar-top">
-                    <span class="progress-label" id="progress-label">Modèle</span>
-                    <span class="progress-counter" id="progress-counter">—</span>
+            <div class="audit-toolbar-sep"></div>
+            <div class="tb-toggle active" id="tog-bold" onclick="toggleStyle('bold')"><span class="dot"></span>Gras</div>
+            <div class="tb-toggle active" id="tog-resp" onclick="toggleStyle('resp')"><span class="dot"></span>Réponse</div>
+            <div class="tb-toggle" id="tog-num" onclick="toggleStyle('num')"><span class="dot"></span>N°</div>
+            <div class="audit-toolbar-sep"></div>
+            <button class="tb-btn" id="tb-snip-btn" onclick="toggleSnipPanel()">📋 Phrases</button>
+            <button class="tb-btn" onclick="exportSingleModel()" title="Exporter ce modèle">💾</button>
+            <button class="tb-btn" onclick="window.print()" title="Imprimer / Exporter PDF">🖨</button>
+            <div style="flex-grow:1;min-width:8px;"></div>
+            <button class="tb-btn" id="tb-reset-order" onclick="resetAuditOrder()" title="Remettre l'ordre original" style="display:none;">↺ Ordre</button>
+            <button class="tb-btn primary" onclick="copyFullReport()">Copier Tout 📋</button>
+        </div>
+        <div class="audit-body">
+            <div class="audit-paper-zone">
+                <div class="progress-bar-wrap" id="progress-wrap">
+                    <div class="progress-bar-top">
+                        <span class="progress-label" id="progress-label">Modèle</span>
+                        <span class="progress-counter" id="progress-counter">—</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
                 </div>
-                <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+                <div class="paper-search-wrap">
+                    <input type="text" id="paper-search" placeholder="🔍 Rechercher dans les questions…" oninput="filterPaperQuestions()" autocomplete="off">
+                </div>
+                <div class="audit-paper" id="paper-content"></div>
             </div>
-            <div class="paper-search-wrap">
-                <input type="text" id="paper-search" placeholder="🔍 Rechercher dans les questions…" oninput="filterPaperQuestions()" autocomplete="off">
+            <div class="audit-snip-panel" id="audit-snip-panel">
+                <div class="audit-snip-panel-inner">
+                    <div class="audit-snip-title">Phrases rapides</div>
+                    <div id="quick-snippets" style="display:flex;flex-direction:column;gap:5px;"></div>
+                    <div style="font-size:.72rem;color:var(--text-muted);text-align:center;cursor:pointer;margin-top:4px;" onclick="navTo('view-snippets')">Gérer tout…</div>
+                </div>
             </div>
-            <div class="audit-paper" id="paper-content"></div>
         </div>
     </section>
 
@@ -333,6 +419,15 @@
                         <div class="editor-col-label">Icône</div>
                         <div class="icon-picker" id="icon-picker"></div>
                     </div>
+                    <div>
+                        <div class="editor-col-label">Tags <span style="font-weight:400;font-size:.7rem;color:var(--text-muted);">(Entrée pour ajouter)</span></div>
+                        <div class="tag-input-wrap" id="edit-tags-display"></div>
+                        <input type="text" id="edit-tag-input" class="tag-input" placeholder="Ajouter un tag…" onkeydown="onTagKeydown(event)">
+                    </div>
+                    <div>
+                        <div class="editor-col-label">Note interne <span style="font-weight:400;font-size:.7rem;color:var(--text-muted);">— invisible en consultation</span></div>
+                        <textarea id="edit-note" class="model-note-field" placeholder="Ex: À utiliser si mineur impliqué · Validé parquet le…" oninput="onEditorChange()"></textarea>
+                    </div>
                 </div>
                 <!-- Barre de statut validation -->
                 <div class="editor-status-bar" id="editor-status-bar"></div>
@@ -378,6 +473,26 @@
         <div id="history-list" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;"></div>
         <div style="display:flex;justify-content:flex-end;">
             <button onclick="closeHistoryModal()" class="action-btn" style="background:var(--bg-input);color:var(--text-main);border:1px solid var(--border);width:auto;">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL IMPORT SÉLECTIF -->
+<div id="modal-import" class="modal-wrap">
+    <div class="modal-box" style="width:min(620px,calc(100vw - 40px));">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <h2 style="color:var(--text-main);font-size:1.05rem;font-weight:700;">📂 Import sélectif</h2>
+            <button onclick="closeImportModal()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);">✕</button>
+        </div>
+        <p style="font-size:.83rem;color:var(--text-muted);">Choisissez les modèles à importer. Les modèles existants avec le même ID seront signalés.</p>
+        <div style="display:flex;gap:8px;margin-bottom:4px;">
+            <button class="mini-btn" onclick="importSelectAll(true)">Tout cocher</button>
+            <button class="mini-btn" onclick="importSelectAll(false)">Tout décocher</button>
+        </div>
+        <div id="import-items-list" style="display:flex;flex-direction:column;gap:6px;max-height:380px;overflow-y:auto;"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+            <button onclick="closeImportModal()" class="action-btn" style="background:var(--bg-input);color:var(--text-main);border:1px solid var(--border);width:auto;">Annuler</button>
+            <button onclick="confirmImport()" class="action-btn" style="width:auto;">Importer la sélection</button>
         </div>
     </div>
 </div>
@@ -483,6 +598,11 @@
     let compositeSelected=[];
     let activeCatFilter=null, activeSubcatFilter=null;
     let editorPreviewVisible=false;
+    let doneStates={};        // { idx: bool } — session seulement
+    let currentEditorTags=[]; // tags en cours d'édition
+    let activeTagFilter=null; // tag sélectionné dans le dashboard
+    let importPending=null;   // données JSON en attente d'import sélectif
+    let dashDragSrc=null;     // id source pour drag dashboard
 
     /* ══════════════════════════════════════
        INIT
@@ -525,6 +645,8 @@
     function normalizeDataCollection(col) {
         return (Array.isArray(col)?col:[]).map(item=>({
             ...item, subcat:item.subcat||'', icon:item.icon||'📁',
+            tags:Array.isArray(item.tags)?item.tags:[],
+            note:item.note||'',
             qs:normalizeQuestions(item.qs||[])
         }));
     }
@@ -544,6 +666,34 @@
         return {type:'qa',question:'',declaration:''};
     }
     function isSection(item) { return item&&item.type==='section'; }
+
+    /* ══════════════════════════════════════
+       TAGS ÉDITEUR
+    ══════════════════════════════════════ */
+    function renderEditorTags() {
+        const wrap=document.getElementById('edit-tags-display');
+        if(!wrap) return;
+        wrap.innerHTML=currentEditorTags.map((t,i)=>
+            `<span class="tag-chip">#${escapeHtml(t)}<span class="tag-chip-rm" onclick="removeEditorTag(${i})">✕</span></span>`
+        ).join('');
+    }
+    function onTagKeydown(e) {
+        if(e.key==='Enter'||e.key===','){
+            e.preventDefault();
+            const val=e.target.value.trim().replace(/^#+/,'').replace(/[,;]/g,'').toLowerCase();
+            if(val&&!currentEditorTags.includes(val)){
+                currentEditorTags.push(val);
+                renderEditorTags();
+                onEditorChange();
+            }
+            e.target.value='';
+        }
+    }
+    function removeEditorTag(i){
+        currentEditorTags.splice(i,1);
+        renderEditorTags();
+        onEditorChange();
+    }
 
     /* ══════════════════════════════════════
        FAVORIS / RÉCENTS / USAGES
@@ -634,6 +784,31 @@
         const grid=document.getElementById('dashboard-grid');
         const term=document.getElementById('search-input').value.toLowerCase();
         grid.innerHTML='';
+        // ── Barre de filtres tags ──
+        const allTags=[...new Set(data.flatMap(i=>i.tags||[]))].sort();
+        const tfb=document.getElementById('tag-filter-bar');
+        if(allTags.length){
+            tfb.style.display='flex';
+            tfb.style.flexWrap='wrap';
+            tfb.style.gap='6px';
+            tfb.style.alignItems='center';
+            tfb.innerHTML=`<span style="font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;">Tags</span>`;
+            allTags.forEach(t=>{
+                const chip=document.createElement('span');
+                chip.className='tag-filter-chip'+(activeTagFilter===t?' active':'');
+                chip.textContent='#'+t;
+                chip.onclick=()=>{ activeTagFilter=activeTagFilter===t?null:t; renderDashboard(); };
+                tfb.appendChild(chip);
+            });
+            if(activeTagFilter){
+                const clr=document.createElement('span');
+                clr.className='tag-filter-chip';
+                clr.style.cssText='background:var(--bg-app);color:var(--text-muted);border-color:var(--border);';
+                clr.textContent='✕ Effacer';
+                clr.onclick=()=>{ activeTagFilter=null; renderDashboard(); };
+                tfb.appendChild(clr);
+            }
+        } else { tfb.style.display='none'; }
 
         // ── Zone Favoris ──
         const favItems = meta.favorites.map(id=>data.find(x=>x.id===id)).filter(Boolean);
@@ -707,8 +882,9 @@
             }
 
             const visible=catItems.filter(i=>{
-                if(activeCatFilter!==catKey||!activeSubcatFilter) return true;
-                return i.subcat===activeSubcatFilter;
+                const subcatOk=activeCatFilter!==catKey||!activeSubcatFilter||i.subcat===activeSubcatFilter;
+                const tagOk=!activeTagFilter||(i.tags||[]).includes(activeTagFilter);
+                return subcatOk&&tagOk;
             });
 
             const g=document.createElement('div');
@@ -718,23 +894,43 @@
                 const sub=i.subcat?`<span style="font-size:.7rem;color:var(--text-muted);">${escapeHtml(i.subcat)}</span>`:'';
                 const fav=isFav(i.id);
                 const usageCount=meta.usages[i.id]||0;
-                g.innerHTML+=`
-                    <div class="card${fav?' is-fav':''}" onclick="openAudit('${i.id}')">
-                        ${fav?'<span class="fav-indicator">⭐</span>':''}
-                        <div class="card-tag ${tag}">${escapeHtml(i.target)}</div>
-                        <div style="font-size:1.5rem">${escapeHtml(i.icon||'📁')}</div>
-                        <div style="font-weight:600">${escapeHtml(i.title)}</div>
-                        ${sub}
-                        ${usageCount>0?`<div class="usage-badge">📂 ${usageCount}×</div>`:''}
-                        <div class="card-actions" onclick="event.stopPropagation()">
-                            <button class="fav-btn" onclick="toggleFav('${i.id}',event)" title="${fav?'Retirer des favoris':'Ajouter aux favoris'}">${fav?'⭐':'☆'}</button>
-                            <button class="mini-btn" onclick="openEditor('${i.id}')" title="Modifier">✎</button>
-                            <button class="mini-btn" onclick="duplicateModelFromDash('${i.id}')" title="Dupliquer">📋</button>
-                        </div>
+                const tagsHtml=(i.tags||[]).length
+                    ?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:2px;">${(i.tags||[]).map(t=>`<span class="tag-chip">#${escapeHtml(t)}</span>`).join('')}</div>`:'';
+                const div=document.createElement('div');
+                div.className='card'+(fav?' is-fav':'');
+                div.draggable=true;
+                div.dataset.id=i.id;
+                div.innerHTML=`
+                    ${fav?'<span class="fav-indicator">⭐</span>':''}
+                    <div class="card-tag ${tag}">${escapeHtml(i.target)}</div>
+                    <div style="font-size:1.5rem">${escapeHtml(i.icon||'📁')}</div>
+                    <div style="font-weight:600">${escapeHtml(i.title)}</div>
+                    ${sub}${tagsHtml}
+                    ${usageCount>0?`<div class="usage-badge">📂 ${usageCount}×</div>`:''}
+                    <div class="card-actions" onclick="event.stopPropagation()">
+                        <button class="fav-btn" onclick="toggleFav('${i.id}',event)" title="${fav?'Retirer des favoris':'Ajouter aux favoris'}">${fav?'⭐':'☆'}</button>
+                        <button class="mini-btn" onclick="openEditor('${i.id}')" title="Modifier">✎</button>
+                        <button class="mini-btn" onclick="duplicateModelFromDash('${i.id}')" title="Dupliquer">📋</button>
                     </div>`;
+                div.onclick=()=>openAudit(i.id);
+                div.addEventListener('dragstart',ev=>{ dashDragSrc=i.id; ev.dataTransfer.effectAllowed='move'; div.classList.add('dragging'); });
+                div.addEventListener('dragend',()=>{ div.classList.remove('dragging'); document.querySelectorAll('.card.drag-target').forEach(el=>el.classList.remove('drag-target')); dashDragSrc=null; });
+                div.addEventListener('dragover',ev=>{ ev.preventDefault(); if(dashDragSrc&&dashDragSrc!==i.id) div.classList.add('drag-target'); });
+                div.addEventListener('dragleave',()=>div.classList.remove('drag-target'));
+                div.addEventListener('drop',ev=>{ ev.preventDefault(); div.classList.remove('drag-target'); if(!dashDragSrc||dashDragSrc===i.id) return; const si=data.findIndex(x=>x.id===dashDragSrc); const ti=data.findIndex(x=>x.id===i.id); if(si<0||ti<0) return; const [moved]=data.splice(si,1); data.splice(ti,0,moved); persistData(); renderDashboard(); });
+                g.appendChild(div);
             });
             grid.appendChild(g);
         }
+        // Numéros clavier 1-9 sur les cartes
+        document.querySelectorAll('#dashboard-grid .card').forEach((card,idx)=>{
+            if(idx<9){
+                const hint=document.createElement('span');
+                hint.className='kbd-hint';
+                hint.textContent=String(idx+1);
+                card.appendChild(hint);
+            }
+        });
     }
 
     function toggleSubcat(catKey,subcat) {
@@ -746,30 +942,44 @@
     /* ══════════════════════════════════════
        AUDITION
     ══════════════════════════════════════ */
+    let originalAuditOrder=null;
     function openAudit(id) {
         activeAudit=data.find(x=>x.id===id);
         if(!activeAudit) return;
         activeAudit.qs=normalizeQuestions(activeAudit.qs);
+        originalAuditOrder=activeAudit.qs.map(q=>JSON.parse(JSON.stringify(q)));
         trackOpen(id);
         document.getElementById('paper-search').value='';
+        const rb=document.getElementById('tb-reset-order'); if(rb) rb.style.display='none';
         navTo('view-audition');
         renderAuditPaper();
         renderQuickSnippets();
+    }
+    function resetAuditOrder() {
+        if(!originalAuditOrder||!activeAudit) return;
+        activeAudit.qs=originalAuditOrder.map(q=>JSON.parse(JSON.stringify(q)));
+        const rb=document.getElementById('tb-reset-order'); if(rb) rb.style.display='none';
+        renderAuditPaper();
+        showFeedback('Ordre restauré !');
     }
 
     function renderAuditPaper() {
         if(!activeAudit) return;
         activeAudit.qs=normalizeQuestions(activeAudit.qs);
         const container=document.getElementById('paper-content');
-        container.innerHTML=`
-            <h2 style="margin-bottom:8px;color:var(--text-main);font-size:1.4rem;">${escapeHtml(activeAudit.title)}</h2>
-            <div style="margin-bottom:28px;border-bottom:2px solid var(--border);"></div>`;
+        container.innerHTML='';
+        const header=document.createElement('div');
+        header.innerHTML=`<h2 style="margin-bottom:8px;color:var(--text-main);font-size:1.4rem;">${escapeHtml(activeAudit.title)}</h2><div style="margin-bottom:28px;border-bottom:2px solid var(--border);"></div>`;
+        container.appendChild(header);
         const totalQs=activeAudit.qs.filter(i=>!isSection(i)).length;
         let qIndex=1;
+        // On travaille sur les indices réels dans activeAudit.qs
         activeAudit.qs.forEach((item,idx)=>{
             if(isSection(item)){
-                const label=escapeHtml((item.text||'').replace(/---/g,'').trim());
-                container.innerHTML+=`<div class="paper-section-divider"><span class="section-label">${label}</span></div>`;
+                const d=document.createElement('div');
+                d.className='paper-section-divider';
+                d.innerHTML=`<span class="section-label">${escapeHtml((item.text||'').replace(/---/g,'').trim())}</span>`;
+                container.appendChild(d);
                 return;
             }
             const finalQ=getReplacedText(item.question);
@@ -781,16 +991,56 @@
             if(styles.num) qIndex++;
             const declHtml=finalDecl?`
                 <div class="q-declaration-box">
-                    <div class="q-declaration-header"><span class="q-declaration-icon">📝</span><span class="q-declaration-title">Déclarations de la victime</span></div>
+                    <div class="q-declaration-header"><span class="q-declaration-icon">📝</span><span class="q-declaration-title">Déclarations de la victime</span><button class="q-declaration-copy" onclick="copyDecl(event,${JSON.stringify(finalDecl).replace(/"/g,'&quot;')})">Copier</button></div>
                     <div class="q-declaration-text">${escapeHtml(finalDecl)}</div>
                 </div>`:'';
-            container.innerHTML+=`
-                <div class="paper-q ${boldClass} ${respClass}" id="q-block-${idx}" data-q-text="${escapeHtml(finalQ.toLowerCase())}">
-                    <div class="q-actions"><button class="mini-btn" onclick="copySingleQ(${idx})">Copier</button></div>
-                    <div class="q-header">${numBadge}<div class="q-content">${escapeHtml(prefix+finalQ)}</div></div>
-                    <div class="q-answer-zone"></div>
-                    ${declHtml}
-                </div>`;
+            const block=document.createElement('div');
+            block.className=`paper-q ${boldClass} ${respClass}`.trim();
+            block.id=`q-block-${idx}`;
+            block.dataset.qText=finalQ.toLowerCase();
+            block.draggable=true;
+            block.innerHTML=`
+                <div class="q-actions">
+                    <span class="q-drag-handle" title="Déplacer">⠿</span>
+                    <button class="mini-btn" onclick="copySingleQ(${idx})">Copier</button>
+                </div>
+                <div class="q-header">${numBadge}<div class="q-content">${escapeHtml(prefix+finalQ)}</div></div>
+                <div class="q-answer-zone"></div>
+                ${declHtml}`;
+            // ── drag & drop réordonnancement ──
+            let dragSrcIdx=null;
+            block.addEventListener('dragstart',ev=>{
+                dragSrcIdx=idx;
+                ev.dataTransfer.effectAllowed='move';
+                ev.dataTransfer.setData('text/plain',String(idx));
+                setTimeout(()=>block.classList.add('q-dragging'),0);
+            });
+            block.addEventListener('dragend',()=>{
+                block.classList.remove('q-dragging');
+                container.querySelectorAll('.q-drag-over').forEach(el=>el.classList.remove('q-drag-over'));
+            });
+            block.addEventListener('dragover',ev=>{
+                ev.preventDefault();
+                const src=parseInt(ev.dataTransfer.getData('text/plain')||'-1');
+                if(src===idx) return;
+                container.querySelectorAll('.q-drag-over').forEach(el=>el.classList.remove('q-drag-over'));
+                block.classList.add('q-drag-over');
+            });
+            block.addEventListener('dragleave',ev=>{
+                if(!block.contains(ev.relatedTarget)) block.classList.remove('q-drag-over');
+            });
+            block.addEventListener('drop',ev=>{
+                ev.preventDefault();
+                block.classList.remove('q-drag-over');
+                const srcIdx=parseInt(ev.dataTransfer.getData('text/plain'));
+                if(isNaN(srcIdx)||srcIdx===idx) return;
+                const [moved]=activeAudit.qs.splice(srcIdx,1);
+                const newTgt=idx>srcIdx?idx-1:idx;
+                activeAudit.qs.splice(newTgt,0,moved);
+                const rb2=document.getElementById('tb-reset-order'); if(rb2) rb2.style.display='';
+                renderAuditPaper();
+            });
+            container.appendChild(block);
         });
         updateProgressBar(totalQs);
     }
@@ -834,11 +1084,39 @@
         document.getElementById('tog-'+key).classList.toggle('active');
         renderAuditPaper(); filterPaperQuestions();
     }
+    function toggleSnipPanel() {
+        const panel=document.getElementById('audit-snip-panel');
+        const btn=document.getElementById('tb-snip-btn');
+        const open=panel.classList.toggle('open');
+        if(btn) btn.style.borderColor=open?'var(--primary)':'';
+    }
+    function toggleSidebar() {
+        const sb=document.querySelector('.sidebar');
+        const btn=document.getElementById('sidebar-toggle');
+        const collapsed=sb.classList.toggle('collapsed');
+        btn.textContent=collapsed?'▶':'◀';
+        let expandBtn=document.getElementById('sidebar-expand-btn');
+        if(!expandBtn){
+            expandBtn=document.createElement('button');
+            expandBtn.id='sidebar-expand-btn';
+            expandBtn.className='sidebar-expand-btn';
+            expandBtn.textContent='▶';
+            expandBtn.title='Afficher la sidebar';
+            expandBtn.onclick=toggleSidebar;
+            document.body.appendChild(expandBtn);
+        }
+        expandBtn.style.display=collapsed?'block':'none';
+    }
     function updateVars() { renderAuditPaper(); filterPaperQuestions(); renderQuickSnippets(); }
 
     /* ══════════════════════════════════════
        COPIE
     ══════════════════════════════════════ */
+    async function copyDecl(ev, text) {
+        if(ev) ev.stopPropagation();
+        await navigator.clipboard.writeText(text);
+        showFeedback('Déclaration copiée !');
+    }
     async function copySingleQ(idx) {
         const item=activeAudit.qs[idx];
         if(!item||isSection(item)) return;
@@ -955,12 +1233,12 @@
     }
     function renderQuickSnippets() {
         const c=document.getElementById('quick-snippets');
+        if(!c) return;
         c.innerHTML='';
-        snippets.slice(0,5).forEach(s=>{
-            const d=getReplacedText(s);
-            c.innerHTML+=`<div class="snippet-card" style="padding:10px;font-size:.85rem;margin-bottom:5px" onclick="copyRawText(${JSON.stringify(s).replace(/"/g,'&quot;')})">${escapeHtml(d)}</div>`;
+        snippets.forEach(s=>{
+            c.innerHTML+=`<div class="snippet-card" style="padding:8px 10px;font-size:.82rem;" onclick="copyRawText(${JSON.stringify(s).replace(/"/g,'&quot;')})">${escapeHtml(getReplacedText(s))}</div>`;
         });
-        c.innerHTML+=`<div style="font-size:.75rem;color:var(--text-muted);text-align:center;cursor:pointer;margin-top:5px;" onclick="navTo('view-snippets')">Gérer tout...</div>`;
+        if(!snippets.length) c.innerHTML='<div style="font-size:.75rem;color:var(--text-muted);text-align:center;padding:8px 0;">Aucune phrase enregistrée</div>';
     }
     function addSnippet() {
         const v=document.getElementById('new-snip').value;
@@ -979,14 +1257,62 @@
         r.onload=e=>{
             try{
                 const j=JSON.parse(e.target.result);
-                data=normalizeDataCollection(j.data||[]);
-                snippets=Array.isArray(j.snippets)?j.snippets:[];
-                if (j.meta && typeof j.meta==='object') meta={...defaultMeta,...j.meta};
-                persistData();persistSnippets();persistMeta();
-                location.reload();
-            } catch{alert('Erreur de lecture du fichier.');}
+                importPending=j;
+                openImportModal(j);
+            } catch{ alert('Erreur de lecture du fichier.'); }
+            inp.value='';
         };
         r.readAsText(inp.files[0]);
+    }
+    function openImportModal(j) {
+        const incoming=normalizeDataCollection(j.data||[]);
+        if(!incoming.length){ alert('Aucun modèle trouvé dans ce fichier.'); return; }
+        const list=document.getElementById('import-items-list');
+        list.innerHTML='';
+        incoming.forEach((item,i)=>{
+            const exists=data.find(x=>x.id===item.id);
+            const qCount=(item.qs||[]).filter(q=>!isSection(q)&&(q.question||'').trim()).length;
+            const div=document.createElement('div');
+            div.className='import-item selected';
+            div.dataset.idx=i;
+            div.innerHTML=`
+                <input type="checkbox" class="import-item-cb" checked id="imp-cb-${i}">
+                <span style="font-size:1.2rem;">${escapeHtml(item.icon||'📁')}</span>
+                <div style="flex-grow:1;min-width:0;">
+                    <div style="font-weight:600;font-size:.88rem;">${escapeHtml(item.title)}</div>
+                    <div style="font-size:.75rem;color:var(--text-muted);">${escapeHtml(item.target||'')} · ${qCount} question${qCount!==1?'s':''}</div>
+                    ${exists?'<div class="import-conflict">&#9888; Remplacera le modèle existant &quot;'+escapeHtml(exists.title)+'&quot;</div>':''}
+                </div>`;
+            div.querySelector('.import-item-cb').onchange=ev=>div.classList.toggle('selected',ev.target.checked);
+            list.appendChild(div);
+        });
+        document.getElementById('modal-import').style.display='flex';
+    }
+    function closeImportModal() {
+        document.getElementById('modal-import').style.display='none';
+        importPending=null;
+    }
+    function importSelectAll(state) {
+        document.querySelectorAll('.import-item-cb').forEach(cb=>{ cb.checked=state; cb.closest('.import-item').classList.toggle('selected',state); });
+    }
+    function confirmImport() {
+        if(!importPending) return;
+        const incoming=normalizeDataCollection(importPending.data||[]);
+        const checked=[...document.querySelectorAll('.import-item-cb')].map((cb,i)=>cb.checked?i:-1).filter(i=>i>=0);
+        if(!checked.length){ alert('Sélectionnez au moins un modèle.'); return; }
+        checked.forEach(i=>{
+            const item=incoming[i];
+            const idx=data.findIndex(x=>x.id===item.id);
+            if(idx>=0) data[idx]=item; else data.push(item);
+        });
+        if(Array.isArray(importPending.snippets)){
+            importPending.snippets.forEach(s=>{ if(!snippets.includes(s)) snippets.push(s); });
+            persistSnippets();
+        }
+        persistData(); renderDashboard();
+        renderSnippets(); renderQuickSnippets();
+        closeImportModal();
+        showFeedback(`${checked.length} modèle${checked.length>1?'s':''} importé${checked.length>1?'s':''} !`);
     }
     function resetData() {
         if(confirm('Effacer toutes les données ?')){localStorage.clear();location.reload();}
@@ -1035,6 +1361,7 @@
         chips += `<span class="status-chip neutral">${escapeHtml(currentEditorIcon)} ${escapeHtml(CAT_LABELS[cat]||cat)}${subcat?' › '+escapeHtml(subcat):''}</span>`;
         const tagCol = target==='Victime'?'#0ea5e9':target==='Témoin'?'#10b981':'#f43f5e';
         chips += `<span class="status-chip neutral" style="color:${tagCol}">● ${escapeHtml(target)}</span>`;
+        if(currentEditorTags.length) chips += currentEditorTags.map(t=>`<span class="status-chip neutral" style="color:#7c3aed;background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.25);">#${escapeHtml(t)}</span>`).join('');
 
         bar.innerHTML = chips;
 
@@ -1083,13 +1410,15 @@
     }
 
     function openEditor(id) {
-        currentQs=[];currentEditorIcon='📁';
+        currentQs=[];currentEditorIcon='📁';currentEditorTags=[];
         document.getElementById('edit-id').value='';
         document.getElementById('edit-title').value='';
         document.getElementById('edit-title').classList.remove('input-error');
         document.getElementById('edit-cat').value='personnes';
         buildSubcatOptions('personnes','');
         document.getElementById('edit-target').value='Victime';
+        const eti=document.getElementById('edit-tag-input'); if(eti) eti.value='';
+        const enote=document.getElementById('edit-note'); if(enote) enote.value='';
         buildIconPicker('📁');
         if(id){
             const item=data.find(x=>x.id===id);
@@ -1101,8 +1430,11 @@
             document.getElementById('edit-target').value=item.target;
             currentEditorIcon=item.icon||'📁';
             buildIconPicker(currentEditorIcon);
+            currentEditorTags=[...(item.tags||[])];
+            if(enote) enote.value=item.note||'';
             currentQs=normalizeQuestions(item.qs);
         }
+        renderEditorTags();
         renderEd();
         renderEditorStatusBar();
         renderEdPreview();
@@ -1121,7 +1453,22 @@
     function closeEditor() { document.getElementById('modal-editor').style.display='none'; }
 
     document.addEventListener('keydown',e=>{
+        if((e.ctrlKey||e.metaKey)&&e.key==='s'){
+            if(document.getElementById('modal-editor').style.display==='flex'){
+                e.preventDefault(); saveModel(); return;
+            }
+        }
+        if(!e.ctrlKey&&!e.metaKey&&!e.altKey&&/^[1-9]$/.test(e.key)){
+            const activeSection=document.querySelector('.view-section.active');
+            if(activeSection&&activeSection.id==='view-dashboard'&&
+               document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){
+                const cards=[...document.querySelectorAll('#dashboard-grid .card')];
+                const idx=parseInt(e.key)-1;
+                if(idx<cards.length){ const id=cards[idx].dataset.id; if(id) openAudit(id); }
+            }
+        }
         if(e.key==='Escape'){
+            if(document.getElementById('modal-import')&&document.getElementById('modal-import').style.display==='flex'){ closeImportModal(); return; }
             if(document.getElementById('modal-history').style.display==='flex'){ closeHistoryModal(); return; }
             if(document.getElementById('modal-editor').style.display==='flex') closeEditor();
             if(document.getElementById('modal-composite').style.display==='flex') closeCompositeModal();
@@ -1158,6 +1505,11 @@
         [currentQs[i],currentQs[ni]]=[currentQs[ni],currentQs[i]];
         renderEd();onEditorChange();
     }
+    function duplicateQuestion(i){
+        const copy=JSON.parse(JSON.stringify(currentQs[i]));
+        currentQs.splice(i+1,0,copy);
+        renderEd();onEditorChange();
+    }
 
     function renderEd() {
         const c=document.getElementById('editor-list');
@@ -1191,6 +1543,7 @@
                     `}
                 </div>
                 <span style="color:#ef4444;cursor:pointer;flex-shrink:0;padding-top:8px;" onclick="currentQs.splice(${i},1);renderEd();onEditorChange();" title="Supprimer">✕</span>
+                <span style="color:var(--text-muted);cursor:pointer;flex-shrink:0;padding-top:8px;font-size:.85rem;" onclick="duplicateQuestion(${i})" title="Dupliquer cette question">⧉</span>
             </div>`;
         }).join('');
     }
@@ -1302,11 +1655,14 @@
             if(isSection(item)) return (item.text||'').trim().length>0;
             return (item.question||'').trim().length>0;
         });
+        const noteEl=document.getElementById('edit-note');
         const model={
             id:id||'c'+Date.now(), icon:currentEditorIcon,
             cat:document.getElementById('edit-cat').value,
             subcat:document.getElementById('edit-subcat').value,
             title:v.title, target:document.getElementById('edit-target').value,
+            tags:[...currentEditorTags],
+            note:noteEl?noteEl.value.trim():'',
             qs:currentQs
         };
         if(id){
